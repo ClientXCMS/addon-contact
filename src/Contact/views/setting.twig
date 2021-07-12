@@ -1,0 +1,23 @@
+<div class="row">
+	<div class="col-md-12 col-sm-12 col-xl-6">
+	{{ field('contact_to', setting('contact.to'), trans("contact.emaillist"))}}
+	</div>
+	<div class="col-md-12 col-sm-12 col-xl-6">
+	{{ field('contact_hours', setting('contact_hours'), trans("contact.hours"), {type: 'number'})}}
+
+	</div>
+	<div class="col-md-12 col-sm-12 mt-2">
+		<div class="form-group custom-control custom-switch">
+			<input type="checkbox" class="custom-control-input" id="contact_enabledwebhook"onclick="$(this).next().val(this.checked?1:0); console.log($(this).next().val(this.checked?'yes':'no').val())" data-toggle="collapse" data-target="#enabledwebhook" {% if setting('contact_enabledwebhook') == 'yes' %} checked {% endif %}>
+			<input type="hiden" class="custom-control-input"  name="contact_enabledwebhook">
+			<label class="custom-control-label" for="contact_enabledwebhook">{{ trans("contact.enablewebhook")}}</label>
+		</div>
+		<div id="enabledwebhook" class="{{ setting('contact_enabledwebhook') == 'yes' ? 'show' : 'collapse'}}">
+			<div class="card border-primary">
+				<div class="card-body mb-2">
+					{{ field('contact_webhook', setting('contact_webhook'), trans('contact.webhook'))}}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
