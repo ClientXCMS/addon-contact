@@ -33,6 +33,10 @@ class ContactMailer
         $message->subject($title);
         $message->line($this->mailer->trans("contact.email.button"));
         $message->line($contact->getSubject() . "(" . $contact->getEmail() .  ")");
+        
+        $message->viewData([
+            'contact' => $contact
+        ]);
         return $this->mailer->send($message);
     }
 }
