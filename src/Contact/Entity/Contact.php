@@ -1,7 +1,6 @@
 <?php
 namespace App\Contact\Entity;
 
-use App\Contact\IpAnonymizer;
 use ClientX\Entity\Timestamp;
 
 class Contact
@@ -104,7 +103,7 @@ class Contact
 
     public function setSubject(string $subject)
     {
-        $this->subject = $subject;
+        $this->subject = html_entity_decode($subject);
 
         return $this;
     }

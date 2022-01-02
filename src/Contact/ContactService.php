@@ -4,6 +4,7 @@ namespace App\Contact;
 
 use App\Contact\Entity\Contact;
 use App\Contact\Table\ContactTable;
+use ClientX\App;
 use ClientX\Helpers\IP;
 
 class ContactService
@@ -25,7 +26,7 @@ class ContactService
     {
         $contact->setRawIp(IP::get());
         $lastRequest = $this->table->findLastRequestForIp($contact->getIP());
-        if ($lastRequest && $lastRequest->getCreatedAt() > new \DateTime(sprintf('-%d hour', $this->hours))) {
+        if ($lastRequest && $lastRequest->getCreatedAt() > new \DateTime(sprintf('-%d hour', $this->hours)) && App::inProduction()) {
             throw new \App\Contact\TooManyContactException();
         }
 

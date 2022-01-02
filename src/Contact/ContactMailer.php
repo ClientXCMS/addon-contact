@@ -1,42 +1,43 @@
 <?php
 namespace App\Contact;
 
+use ClientX\Entity\EmailMessage;
 use App\Contact\Entity\Contact;
+use ClientX\Database\EmailMessageTable;
 use ClientX\Notifications\Mailer\MailMessage;
-use ClientX\Notifications\Mailer\Support\DatabaseMailer;
+use ClientX\Notifications\Mailer\Support\SwiftMailer;
 use ClientX\Router;
 
 class ContactMailer
 {
 
-    /**
-     * @var string
-     */
-    private string $from;
-    private DatabaseMailer $mailer;
+    private SwiftMailer $mailer;
     private Router $router;
+    private EmailMessageTable $table;
 
-    public function __construct(DatabaseMailer $mailer, Router $router, string $from, string $to)
+    public function __construct(SwiftMailer $mailer, Router $router, string $to, EmailMessageTable $table)
     {
-        $this->mailer = $mailer;
-        $this->router = $router;
-        $this->from = $from;
-        $this->to   = $to;
+        $this->mailer   = $mailer;
+        $this->router   = $router;
+        $this->to       = empty($to) ? 'contact@clientxcms.com' : $to;
+        $this->table    = $table;
     }
     public function sendTo(Contact $contact)
     {
-        $link = $this->router->generateURI('admin.contacts.edit', ['id' => $contact->getId()]);
-        $title = "ClientXCMS :: Contact";
-        $message = MailMessage::initTranslated($this->mailer->getTranslator(), $this->from);
-        $message->bcc($this->to);
-        $message->action($this->mailer->trans("contact.email.button"), $link);
-        $message->subject($title);
-        $message->line($this->mailer->trans("contact.email.button"));
-        $message->line($contact->getSubject() . "(" . $contact->getEmail() .  ")");
-        
-        $message->viewData([
+        $template = $this->table->getConfiguredCustomTemplate('contact');
+        $link = $this->router->generateURIAbsolute('admin.contacts.edit', ['id' => $contact->getId()]);
+        $message = new EmailMessage();
+        $template->setContext([
             'contact' => $contact
         ]);
+        $message->setUserId(0)
+            ->setContext($template->getContext())
+            ->setSubject($template->getSubject())
+            ->setBoutonText($template->getBoutonText())
+            ->setContent($this->mailer->renderCustomTemplate($template))
+            ->setEmail($this->to)
+            ->setBoutonUrl($link)
+            ->setTemplateName('contact');
         return $this->mailer->send($message);
     }
 }
