@@ -28,6 +28,9 @@
 								</div>
 								{{ field('subject', subject, trans("your_subject")) }}
 								{{ field('content', content, trans("your_message"), {type: 'textarea', is: 'textarea-autogrow', style: 'height:150px;'}) }}
+								<div style="text-align: center;">
+            						{{ recaptcha() }}
+        						</div>
 								<button class="btn btn-primary mt-2"><i class="fas fa-pen"></i> {{ trans("send") }}</button>
 							</form>
 						</div>
