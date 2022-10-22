@@ -19,7 +19,7 @@ class ContactModule extends Module
         "fr_FR" => __DIR__ ."/trans/fr.php",
         "en_GB" => __DIR__ ."/trans/en.php",
         "uk_UA" => __DIR__ . "/trans/ua.php",
-        "es_ES" => __DIR__ . "/trans/es.php",
+        "es_ES" => __DIR__ . "/trans/es.php"
     ];
 
     public function __construct(Router $router, Renderer $renderer, Theme $theme, Container $container)
