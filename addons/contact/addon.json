@@ -1,0 +1,13 @@
+{
+    "name": "Contact",
+    "description": "contact service",
+    "uuid": "contact",
+    "version": "1.0",
+    "author": {
+        "name": "florentindev",
+        "email": "florentindev@clientxcms.com"
+    },
+    "providers": [
+        "App\\Addons\\Contact\\ContactServiceProvider"
+    ]
+}

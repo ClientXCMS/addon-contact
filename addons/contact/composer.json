@@ -1,0 +1,17 @@
+{
+    "name": "clientxcms/contact",
+    "description": "contact service",
+    "type": "clientxcms-addon",
+    "require": {
+        "php": ">=8.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "platform-check": false
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Addons\\Contact\\": "src/"
+        }
+    }
+}
