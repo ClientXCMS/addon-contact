@@ -19,20 +19,20 @@
               Nous serions ravis de recevoir vos messages. Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.
             </p>
             @if(session('success'))
-            <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
-              {{ session('success') }}
-            </div>
-          @endif
+                <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-800" role="alert">
+                {{ session('success') }}
+                </div>
+            @endif
 
-          @if($errors->any())
-            <div class="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
-              <ul>
-                @foreach($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-            </div>
-          @endif
+            @if($errors->any())
+                <div class="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200" role="alert">
+                <ul>
+                    @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                </div>
+            @endif
             <form class="mt-6" action="{{ route($routePath . ".customer.store") }}" method="POST">
                 @csrf
               <div>
@@ -45,7 +45,7 @@
               </div>
               <div class="mt-4">
                 <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sujet</label>
-                <input type="subject" id="subject" name="subject" placeholder="Votre subject" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="subject" id="subject" name="subject" placeholder="Votre subject" class="mt-1 block w-full h-10 px-4 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
               </div>
               <div class="mt-4">
                 <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
@@ -55,6 +55,9 @@
                 <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Envoyer
                 </button>
+                @if (isset($captcha))
+                    @include('shared/captcha')
+                @endif
               </div>
             </form>
           </div>

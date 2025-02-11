@@ -1,30 +1,30 @@
 <?php
-/*
- * This file is part of the CLIENTXCMS project.
- * This file is the property of the CLIENTXCMS association. Any unauthorized use, reproduction, or download is prohibited.
- * For more information, please consult our support: clientxcms.com/client/support.
- * Year: 2024
- */
 namespace App\Addons\Contact\Controllers\Admin;
 
 use App\Addons\Contact\Models\Contact;
-use App\Models\Account\Customer;
-use App\Http\Controllers\Admin\AbstractCrudController;
+use App\Services\SettingsService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\Account\Customer;
+use App\Models\Admin\Setting as Setting;
+use App\Http\Controllers\Admin\AbstractCrudController;
+
+
+
 
 
 class ContactController extends AbstractCrudController
 {
     protected string $model = Contact::class;
     protected string $viewPath = 'contact_admin::';
-    protected string $translatePrefix = 'contact::messages.admin';
     protected string $routePath = 'contact.contact';
+
+
 
     public function index(Request $request): View
     {
         $contacts = Contact::all();
-        return view('contact_admin::index', compact('contacts'))->with('routePath', $this->routePath);;
+        return view('contact_admin::index', compact('contacts'))->with('routePath', $this->routePath);
     }
 
     public function show(int $id): View
@@ -58,41 +58,28 @@ class ContactController extends AbstractCrudController
                 ->with('error', __('contact::lang.errors.update_failed'));
         }
     }
-
-    public function customerindex() {
-        if (!auth('web')->check()) {
-            return redirect()->route('login');
-        }
-        $Customer = Customer::where('email', auth('web')->user()->email)->first();
-        return view('contact_default::index', compact('Customer'))->with('routePath', "contact.admin");
+    public function settings(): View
+    {
+        return view('contact_admin::settings', [
+            'enable_captcha' => setting('enable_captcha', '0'),
+            'require_login' => setting('require_login', '0')
+        ])->with('routePath', $this->routePath);
     }
 
-    public function customerstore(Request $request) {
-        if (!auth('web')->check()) {
-            return redirect()->route('login');
-        }
 
 
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'message' => 'required',
-            'subject' => 'required'
+    public function storeSettings(Request $request)
+    {
+        $validated = $request->validate([
+            'enable_captcha' => ['required', 'in:0,1'],
+            'require_login' => ['required', 'in:0,1'],
         ]);
 
-        $customer = Customer::where('email', auth('web')->user()->email)->first();
-        $name = $customer ? trim($customer->firstname . ' ' . $customer->lastname) : $request->name;
+        Setting::updateSettings($validated);
 
-
-        Contact::create([
-            'name' => $name,
-            'email' => $request->email,
-            'subject' => $request->subject,
-            'message' => $request->message,
-            'read' => false
-        ]);
-
-        return redirect()->route('contact.admin.customer.index')->with('success', __('contact::lang.actions.store_success'));
+        return redirect()->route('admin.settings.index')->with('success', __('contact::lang.settings.saved_successfully'));
     }
+
+
 
 }
