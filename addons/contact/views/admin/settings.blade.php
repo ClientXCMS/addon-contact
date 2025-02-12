@@ -1,6 +1,7 @@
 @extends('admin/layouts/admin')
 @section('title', __('contact::lang.settings.title'))
 
+
 @section('content')
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="container mx-auto px-3">
@@ -12,6 +13,34 @@
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ __('contact::lang.settings.title') }}</h1>
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ __('contact::lang.settings.description') }}</p>
             </div>
+
+            @if ($errors->any())
+    <div class="mb-4 bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 rounded-lg p-4">
+        <div class="flex items-center">
+            <svg class="flex-shrink-0 w-4 h-4 mr-2 text-red-600 dark:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="text-sm font-medium text-red-800 dark:text-red-200">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+@endif
+
+@if (session('success'))
+    <div class="mb-4 bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-4">
+        <div class="flex items-center">
+            <svg class="flex-shrink-0 w-4 h-4 mr-2 text-green-600 dark:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <div class="text-sm font-medium text-green-800 dark:text-green-200">
+                {{ session('success') }}
+            </div>
+        </div>
+    </div>
+@endif
 
             <!-- Main Settings Card -->
             <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
@@ -41,7 +70,7 @@
                                 <!-- Enable Captcha -->
                                 <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                                     <div>
-                                        <label for="enable_captcha" class="font-medium text-gray-900 dark:text-white">
+                                        <label for="contact_enable_captcha" class="font-medium text-gray-900 dark:text-white">
                                             {{ __('contact::lang.settings.enable_captcha') }}
 
                                         </label>
@@ -50,12 +79,12 @@
                                         </p>
                                     </div>
                                     <div class="flex items-center">
-                                        <select name="enable_captcha" id="enable_captcha"
+                                        <select name="contact_enable_captcha" id="contact_enable_captcha"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option value="1"  >
+                                            <option value="1" {{ $enable_captcha == '1' ? 'selected' : '' }}  >
                                                 {{ __('contact::lang.settings.enabled') }}
                                             </option>
-                                            <option value="0" >
+                                            <option value="0" {{ $enable_captcha == '0' ? 'selected' : '' }} >
                                                 {{ __('contact::lang.settings.disabled') }}
                                             </option>
                                         </select>
@@ -66,7 +95,7 @@
                                 <!-- Require Login -->
                                 <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                                     <div>
-                                        <label for="require_login" class="font-medium text-gray-900 dark:text-white">
+                                        <label for="contact_require_login" class="font-medium text-gray-900 dark:text-white">
                                             {{ __('contact::lang.settings.require_login') }}
                                         </label>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -74,7 +103,7 @@
                                         </p>
                                     </div>
                                     <div class="flex items-center">
-                                        <select name="require_login" id="require_login"
+                                        <select name="contact_require_login" id="contact_require_login"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                             <option value="1" {{ $require_login == '1' ? 'selected' : '' }}>
                                                 {{ __('contact::lang.settings.enabled') }}

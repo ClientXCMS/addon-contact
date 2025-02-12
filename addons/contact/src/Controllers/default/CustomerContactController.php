@@ -11,24 +11,43 @@ use App\Addons\Contact\Models\Contact;
 use App\Models\Account\Customer;
 use App\Http\Controllers\Admin\AbstractCrudController;
 use Illuminate\Http\Request;
+use App\Models\Admin\Setting as Setting;
 use Illuminate\View\View;
 
 
 class CustomerContactController extends AbstractCrudController
 {
     public function customerindex() {
-        if (!auth('web')->check()) {
-            return redirect()->route('login');
+        if (setting('contact_require_login', '0') == 1) {
+            if (!auth('web')->check()) {
+                return redirect()->route('login');
+            }
+            $Customer = Customer::where('email', auth('web')->user()->email)->first();
+
+        } else {
+            $Customer = "";
+
         }
-        $Customer = Customer::where('email', auth('web')->user()->email)->first();
-        return view('contact_default::index', compact('Customer'))->with('routePath', "contact.admin");
+        if (setting('contact_enable_captcha', '0') == 1) {
+            $captcha = true;
+        } else {
+            $captcha = false;
+        }
+
+
+        return view('contact_default::index', compact('Customer', 'captcha'))->with('routePath', "contact.admin");
     }
 
 
     public function customerstore(Request $request) {
-        if (!auth('web')->check()) {
-            return redirect()->route('login');
+
+        if (setting('captcha_require_login', '0') == 1) {
+            if (!auth('web')->check()) {
+                return redirect()->route('login');
+            }
         }
+
+
 
 
         $request->validate([

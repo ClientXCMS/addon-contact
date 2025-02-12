@@ -11,5 +11,6 @@ use App\Addons\Contact\Controllers\Admin\ContactController;
 
 Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy', 'update']);
 
-Route::get('/contact/settings', [ContactController::class, 'settings'])->name('contact.settings');
-Route::post('/contact/settings', [ContactController::class, 'storeSettings'])->name('contact.settings.store');
+Route::get('/contact/settings', [ContactController::class, 'settings'])->name('contacts.settings');
+Route::post('/contact/settings', [ContactController::class, 'storeSettings'])->name('contacts.settings.store');
+

@@ -17,7 +17,8 @@ class ContactController extends AbstractCrudController
 {
     protected string $model = Contact::class;
     protected string $viewPath = 'contact_admin::';
-    protected string $routePath = 'contact.contact';
+    protected string $routePath = 'contact.contacts';
+
 
 
 
@@ -60,9 +61,10 @@ class ContactController extends AbstractCrudController
     }
     public function settings(): View
     {
+        // dd(setting('contact_enable_captcha', '0'), setting('contact_require_login', '0'));
         return view('contact_admin::settings', [
-            'enable_captcha' => setting('enable_captcha', '0'),
-            'require_login' => setting('require_login', '0')
+            'enable_captcha' => setting('contact_enable_captcha', '0'),
+            'require_login' => setting('contact_require_login', '0')
         ])->with('routePath', $this->routePath);
     }
 
@@ -70,14 +72,39 @@ class ContactController extends AbstractCrudController
 
     public function storeSettings(Request $request)
     {
-        $validated = $request->validate([
-            'enable_captcha' => ['required', 'in:0,1'],
-            'require_login' => ['required', 'in:0,1'],
-        ]);
 
-        Setting::updateSettings($validated);
+        try {
+            $validated = $request->validate([
+            'contact_enable_captcha' => 'required',
+            'contact_require_login' => 'required',
+            ]);
 
-        return redirect()->route('admin.settings.index')->with('success', __('contact::lang.settings.saved_successfully'));
+            Setting::updateSettings('contact_enable_captcha', $validated['contact_enable_captcha']);
+            Setting::updateSettings('contact_require_login', $validated['contact_require_login']);
+
+            return redirect()->route($this->routePath . '.settings')
+            ->with('success', __('contact::lang.settings.saved_successfully'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+            ->withErrors(['error' => __('contact::lang.settings.save_failed') . ': ' . $e->getMessage()])
+            ->withInput();
+        }
+        // try {
+        //     $validated = $request->validate([
+        //         'contact_enable_captcha' => 'required',
+        //         'contact_require_login' => 'required',
+        //     ]);
+
+        //     Setting::updateSettings('contact_enable_captcha', $validated['contact_enable_captcha']);
+        //     Setting::updateSettings('contact_require_login', $validated['contact_require_login']);
+
+        //     return redirect()->route('admin.settings.index')
+        //         ->with('success', __('contact::lang.settings.saved_successfully'));
+        // } catch (\Exception $e) {
+        //     return redirect()->back()
+        //         ->withErrors(['error' => __('contact::lang.settings.save_failed')])
+        //         ->withInput();
+        // }
     }
 
 

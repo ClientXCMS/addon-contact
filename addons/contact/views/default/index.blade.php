@@ -41,7 +41,7 @@
               </div>
               <div class="mt-4">
                 <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                <input type="email" id="email" name="email" placeholder="Votre email" value="{{ auth('web')->user()->email }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="email" id="email" name="email" placeholder="Votre email" value="{{ isset($Customer->email) ? $Customer->email : '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
               </div>
               <div class="mt-4">
                 <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sujet</label>
@@ -55,7 +55,7 @@
                 <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Envoyer
                 </button>
-                @if (isset($captcha))
+                @if($captcha)
                     @include('shared/captcha')
                 @endif
               </div>
