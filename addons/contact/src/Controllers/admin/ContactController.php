@@ -64,7 +64,8 @@ class ContactController extends AbstractCrudController
         // dd(setting('contact_enable_captcha', '0'), setting('contact_require_login', '0'));
         return view('contact_admin::settings', [
             'enable_captcha' => setting('contact_enable_captcha', '0'),
-            'require_login' => setting('contact_require_login', '0')
+            'require_login' => setting('contact_require_login', '0'),
+            'page_image' => setting('contact_page_image', null)
         ])->with('routePath', $this->routePath);
     }
 
@@ -75,36 +76,31 @@ class ContactController extends AbstractCrudController
 
         try {
             $validated = $request->validate([
-            'contact_enable_captcha' => 'required',
-            'contact_require_login' => 'required',
+                'contact_enable_captcha' => 'required',
+                'contact_require_login' => 'required',
+                'page_image' => 'nullable|image|mimes:jpeg,png,gif|max:2048'
             ]);
 
             Setting::updateSettings('contact_enable_captcha', $validated['contact_enable_captcha']);
             Setting::updateSettings('contact_require_login', $validated['contact_require_login']);
 
+            if ($request->hasFile('page_image')) {
+                $image = $request->file('page_image');
+                $uniqueId = uniqid();
+                $extension = $image->getClientOriginalExtension();
+                $filename = "contact_image_{$uniqueId}.{$extension}";
+
+                $image->storeAs('images', $filename);
+                Setting::updateSettings('contact_page_image', 'images/'.  $filename);
+            }
+
             return redirect()->route($this->routePath . '.settings')
-            ->with('success', __('contact::lang.settings.saved_successfully'));
+                ->with('success', __('contact::lang.settings.saved_successfully'));
         } catch (\Exception $e) {
             return redirect()->back()
-            ->withErrors(['error' => __('contact::lang.settings.save_failed') . ': ' . $e->getMessage()])
-            ->withInput();
+                ->withErrors(['error' => __('contact::lang.settings.save_failed') . ': ' . $e->getMessage()])
+                ->withInput();
         }
-        // try {
-        //     $validated = $request->validate([
-        //         'contact_enable_captcha' => 'required',
-        //         'contact_require_login' => 'required',
-        //     ]);
-
-        //     Setting::updateSettings('contact_enable_captcha', $validated['contact_enable_captcha']);
-        //     Setting::updateSettings('contact_require_login', $validated['contact_require_login']);
-
-        //     return redirect()->route('admin.settings.index')
-        //         ->with('success', __('contact::lang.settings.saved_successfully'));
-        // } catch (\Exception $e) {
-        //     return redirect()->back()
-        //         ->withErrors(['error' => __('contact::lang.settings.save_failed')])
-        //         ->withInput();
-        // }
     }
 
 

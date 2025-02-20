@@ -17,25 +17,24 @@ use Illuminate\View\View;
 
 class CustomerContactController extends AbstractCrudController
 {
-    public function customerindex() {
+    public function customerindex(): View
+    {
+        $customer = null;
+        if (setting('contact_require_login', '0') == 1 && !auth('web')->check()) {
+            return redirect()->route('login');
+        }
+
         if (setting('contact_require_login', '0') == 1) {
-            if (!auth('web')->check()) {
-                return redirect()->route('login');
-            }
-            $Customer = Customer::where('email', auth('web')->user()->email)->first();
-
-        } else {
-            $Customer = "";
-
-        }
-        if (setting('contact_enable_captcha', '0') == 1) {
-            $captcha = true;
-        } else {
-            $captcha = false;
+            $customer = Customer::where('email', auth('web')->user()->email)->first();
         }
 
+        $captcha = setting('contact_enable_captcha', '0') == 1;
 
-        return view('contact_default::index', compact('Customer', 'captcha'))->with('routePath', "contact.admin");
+        return view('contact_default::index', [
+            'Customer' => $customer,
+            'captcha' => $captcha,
+            'routePath' => 'contact.admin'
+        ]);
     }
 
 
@@ -46,21 +45,14 @@ class CustomerContactController extends AbstractCrudController
                 return redirect()->route('login');
             }
         }
-
-
-
-
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
             'message' => 'required',
             'subject' => 'required'
         ]);
-
         $customer = Customer::where('email', auth('web')->user()->email)->first();
         $name = $customer ? trim($customer->firstname . ' ' . $customer->lastname) : $request->name;
-
-
         Contact::create([
             'name' => $name,
             'email' => $request->email,
