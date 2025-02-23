@@ -119,13 +119,39 @@
                                     <label class="block text-sm font-medium text-gray-900 dark:text-white mb-4">
                                         {{ __('contact::lang.settings.page_image') }}
                                     </label>
+                                    @if(!empty($page_image))
+                                        <div class="relative mb-6">
+                                            <div class="group relative rounded-xl overflow-hidden">
+                                                <!-- Image principale -->
+                                                <img src="{{ asset('storage/images/' . basename($page_image)) }}"
+                                                    class="w-full max-w-md h-48 object-cover transition duration-200 group-hover:brightness-50"
+                                                    alt="{{ __('contact::lang.settings.page_image') }}">
 
+                                                <!-- Bouton de suppression (visible au hover) -->
+                                                <form action="{{ route($routePath . '.settings.deleteImage') }}"
+                                                    method="POST"
+                                                    class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                            onclick="return confirm('{{ __('Êtes-vous sûr de vouloir supprimer cette image ?') }}')"
+                                                            class="transform scale-90 group-hover:scale-100 transition-all duration-200 inline-flex items-center gap-2 px-4 py-2 bg-red-500/90 hover:bg-red-600 text-white rounded-lg backdrop-blur-sm">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                        </svg>
+                                                        <span class="font-medium">{{ __('Supprimer') }}</span>
+                                                    </button>
+                                                </form>
 
-
-                                    <img src="images/contact_image_67ae46ec86ba2.jpg" alt="test">
-
-
-
+                                                <!-- Badge du nom de fichier -->
+                                                <div class="absolute top-2 right-2 px-2 py-1 bg-black/50 backdrop-blur-sm rounded-lg">
+                                                    <p class="text-xs font-medium text-white">
+                                                        {{ basename($page_image) }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
 
                                     <div class="relative">
                                         <input type="file"
@@ -133,12 +159,12 @@
                                                id="page_image"
                                                accept="image/png,image/jpeg,image/gif"
                                                class="hidden"
-                                               onchange="updateFileName(this)">
+                                               onchange="updatefilename(this)">
 
                                         <label for="page_image" class="cursor-pointer flex flex-col items-center p-6 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors">
                                             <div class="mb-3 text-gray-400 dark:text-gray-500">
-                                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                                <svg class="w-12 h-12" fill="none" stroke="currentcolor" viewbox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 16a4 4 0 01-.88-7.903a5 5 0 1115.9 6l16 6a5 5 0 011 9.9m15 13l-3-3m0 0l-3 3m3-3v12"/>
                                                 </svg>
                                             </div>
                                             <div class="text-center space-y-2">
@@ -147,9 +173,9 @@
                                                     {{ __('contact::lang.settings.or_drag_and_drop') }}
                                                 </p>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                    PNG, JPG, GIF {{ __('contact::lang.settings.up_to_2mb') }}
+                                                    png, jpg, gif {{ __('contact::lang.settings.up_to_2mb') }}
                                                 </p>
-                                                <p id="selectedFileName" class="text-sm text-gray-600 dark:text-gray-400"></p>
+                                                <p id="selectedfilename" class="text-sm text-gray-600 dark:text-gray-400"></p>
                                             </div>
                                         </label>
                                     </div>

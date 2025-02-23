@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use App\Models\Account\Customer;
 use App\Models\Admin\Setting as Setting;
 use App\Http\Controllers\Admin\AbstractCrudController;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -28,9 +29,9 @@ class ContactController extends AbstractCrudController
         return view('contact_admin::index', compact('contacts'))->with('routePath', $this->routePath);
     }
 
-    public function show(int $id): View
+    public function show($id): View
     {
-        $contact = Contact::findOrFail($id);
+        $contact = Contact::findOrFail((int) $id);
         return view('contact_admin::show', compact('contact'))->with('routePath', $this->routePath);
     }
 
@@ -61,7 +62,6 @@ class ContactController extends AbstractCrudController
     }
     public function settings(): View
     {
-        // dd(setting('contact_enable_captcha', '0'), setting('contact_require_login', '0'));
         return view('contact_admin::settings', [
             'enable_captcha' => setting('contact_enable_captcha', '0'),
             'require_login' => setting('contact_require_login', '0'),
@@ -85,13 +85,13 @@ class ContactController extends AbstractCrudController
             Setting::updateSettings('contact_require_login', $validated['contact_require_login']);
 
             if ($request->hasFile('page_image')) {
+                if (setting('contact_page_image')) {
+                    Storage::delete('public/' . setting('contact_page_image'));
+                }
                 $image = $request->file('page_image');
-                $uniqueId = uniqid();
-                $extension = $image->getClientOriginalExtension();
-                $filename = "contact_image_{$uniqueId}.{$extension}";
-
-                $image->storeAs('images', $filename);
-                Setting::updateSettings('contact_page_image', 'images/'.  $filename);
+                $filename = 'contact_image_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('public/images', $filename);
+                Setting::updateSettings('contact_page_image', 'images/' . $filename);
             }
 
             return redirect()->route($this->routePath . '.settings')
@@ -101,6 +101,16 @@ class ContactController extends AbstractCrudController
                 ->withErrors(['error' => __('contact::lang.settings.save_failed') . ': ' . $e->getMessage()])
                 ->withInput();
         }
+    }
+
+    public function deleteIMGSettings()
+    {
+        if (setting('contact_page_image')) {
+            Storage::delete('public/' . setting('contact_page_image'));
+            Setting::updateSettings('contact_page_image', null);
+        }
+        return redirect()->route($this->routePath . '.settings')
+            ->with('success', __('contact::lang.settings.image_deleted'));
     }
 
 

@@ -13,4 +13,5 @@ Route::resource('contacts', ContactController::class)->only(['index', 'show', 'd
 
 Route::get('/contact/settings', [ContactController::class, 'settings'])->name('contacts.settings');
 Route::post('/contact/settings', [ContactController::class, 'storeSettings'])->name('contacts.settings.store');
+Route::delete('/contact/settings', [ContactController::class, 'deleteIMGSettings'])->name('contacts.settings.deleteImage');
 

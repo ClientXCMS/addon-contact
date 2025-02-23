@@ -13,11 +13,11 @@ use App\Http\Controllers\Admin\AbstractCrudController;
 use Illuminate\Http\Request;
 use App\Models\Admin\Setting as Setting;
 use Illuminate\View\View;
-
+use Illuminate\Http\RedirectResponse;
 
 class CustomerContactController extends AbstractCrudController
 {
-    public function customerindex(): View
+    public function customerindex(): View|RedirectResponse
     {
         $customer = null;
         if (setting('contact_require_login', '0') == 1 && !auth('web')->check()) {
@@ -33,6 +33,7 @@ class CustomerContactController extends AbstractCrudController
         return view('contact_default::index', [
             'Customer' => $customer,
             'captcha' => $captcha,
+            'page_image' => setting('contact_page_image', null),
             'routePath' => 'contact.admin'
         ]);
     }
