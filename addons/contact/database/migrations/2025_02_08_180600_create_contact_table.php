@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('addon_contact', function (Blueprint $table) {
+        Schema::create('addon_contacts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email');
             $table->string('subject');
             $table->text('message');
+            $table->string('ip_address')->nullable();
             $table->boolean('read')->default(false);
+            $table->softDeletes();
+            $table->unsignedBigInteger('customer_id')->nullable();
             $table->timestamps();
         });
     }

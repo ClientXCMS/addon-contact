@@ -5,6 +5,7 @@
         <div class="flex flex-col">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
+                    @include('admin/shared/alerts')
                     <div class="card">
                         <div class="card-heading">
                             <div>
@@ -15,12 +16,6 @@
                                     {{ __('contact::lang.management_description') }}
                                 </p>
                             </div>
-                            <div class="">
-                                <a href="{{ route($routePath . '.settings') }}" class="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-lg border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800">
-                                    <i class="bi bi-gear-fill"></i>
-                                    {{ __('contact::lang.actions.settings') }}
-                                </a>
-                            </div>
                         </div>
                         <div class="border rounded-lg overflow-hidden dark:border-gray-700">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -29,47 +24,58 @@
                                     <th scope="col" class="px-6 py-3 text-start">
                                         <div class="flex items-center gap-x-2">
                                             <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                                                {{ __('contact::lang.table.id') }}
+                                                #
                                             </span>
                                         </div>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-start">
                                         <div class="flex items-center gap-x-2">
                                             <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                                                {{ __('contact::lang.table.title') }}
+                                                {{ __('contact::lang.subject') }}
                                             </span>
                                         </div>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-start">
                                         <div class="flex items-center gap-x-2">
                                             <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                                                {{ __('contact::lang.table.email') }}
+                                                {{ __('global.email') }}
                                             </span>
                                         </div>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-start">
                                         <div class="flex items-center gap-x-2">
                                             <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                                                {{ __('contact::lang.table.status') }}
+                                                {{ __('global.status') }}
                                             </span>
                                         </div>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-start">
                                         <div class="flex items-center gap-x-2">
                                             <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                                                {{ __('contact::lang.table.created_at') }}
+                                                {{ __('global.created') }}
                                             </span>
                                         </div>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-start">
                                         <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                                            {{ __('contact::lang.table.actions') }}
+                                            {{ __('global.actions') }}
                                         </span>
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    @foreach($contacts as $item)
+                                @if (count($items) == 0)
+                                    <tr class="bg-white hover:bg-gray-50 dark:bg-slate-900 dark:hover:bg-slate-800">
+                                        <td colspan="8" class="px-6 py-4 whitespace-nowrap text-center">
+                                            <div class="flex flex-auto flex-col justify-center items-center p-2 md:p-3">
+                                                <p class="text-sm text-gray-800 dark:text-gray-400">
+                                                    {{ __('global.no_results') }}
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
+                                    @foreach($items as $item)
                                     <tr class="bg-white hover:bg-gray-50 dark:bg-slate-900 dark:hover:bg-slate-800">
                                         <td class="h-px w-px whitespace-nowrap">
                                             <span class="block px-6 py-2">
@@ -82,9 +88,17 @@
                                             </span>
                                         </td>
                                         <td class="h-px w-px whitespace-nowrap">
+                                            @if ($item->customer)
+                                                <a href="{{ route('admin.customers.show', [$item->customer]) }}">
+                                                    <span class="block px-6 py-2">
+                                                        <span class="text-sm text-gray-600 dark:text-gray-400">{{ $item->customer->email }}</span>
+                                                    </span>
+                                                </a>
+                                            @else
                                             <span class="block px-6 py-2">
                                                 <span class="text-sm text-gray-600 dark:text-gray-400">{{ $item->email }}</span>
                                             </span>
+                                            @endif
                                         </td>
                                         <td class="h-px w-px whitespace-nowrap">
                                             <span class="block px-6 py-2">
@@ -103,7 +117,7 @@
                                         </td>
                                         <td class="h-px w-px whitespace-nowrap">
                                             <span class="block px-6 py-2">
-                                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ $item->created_at ? $item->created_at->format('d/m/y') : '-' }}</span>
+                                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ $item->created_at ? $item->created_at->format('d/m/y H:i:s') : '-' }}</span>
                                             </span>
                                         </td>
                                         <td class="h-px w-px whitespace-nowrap">
@@ -111,17 +125,17 @@
                                                 <span class="px-1 py-1.5">
                                                     <span class="py-1 px-2 inline-flex justify-center items-center gap-2 rounded-lg border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800">
                                                         <i class="bi bi-eye-fill"></i>
-                                                        {{ __('contact::lang.actions.view') }}
+                                                        {{ __('global.view') }}
                                                     </span>
                                                 </span>
                                             </a>
                                             <form action="{{ route($routePath . '.destroy', $item->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('{{ __('contact::lang.confirm_delete') }}')">
+                                                <button type="submit" onclick="return confirmation()">
                                                     <span class="py-1 px-2 inline-flex justify-center items-center gap-2 rounded-lg border font-medium bg-red text-red-700 shadow-sm align-middle hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-red-900 dark:hover:bg-red-800 dark:border-red-700 dark:text-white dark:hover:text-white dark:focus:ring-offset-gray-800">
                                                         <i class="bi bi-trash"></i>
-                                                        {{ __('contact::lang.actions.delete') }}
+                                                        {{ __('global.delete') }}
                                                     </span>
                                                 </button>
                                             </form>

@@ -1,0 +1,20 @@
+{
+    "contact_subscriber": {
+        "fr_FR": {
+            "subject": "Nouvelle demande de contact",
+            "button": "Voir la demande",
+            "body": "Vous avez reçu une nouvelle demande de contact. Voici les informations du contact :\nNom: {{$name}}\nEmail: {{$email}}\nSujet: {{$subject}}\nMessage: {{$message}}"
+        },
+        "en_GB": {
+            "subject": "New contact request",
+            "button": "View request",
+            "body": "You have received a new contact request. Here are the contact details:\nName: {{$name}}\nEmail: {{$email}}\nSubject: {{$subject}}\nMessage: {{$message}}"
+        },
+        "es_ES": {
+            "subject": "Nueva solicitud de contacto",
+            "button": "Ver solicitud",
+            "body": "Ha recibido una nueva solicitud de contacto. Aquí están los detalles de contacto:\nNombre: {{$name}}\nEmail: {{$email}}\nAsunto: {{$subject}}\nMensaje: {{$message}}"
+        }
+
+    }
+}

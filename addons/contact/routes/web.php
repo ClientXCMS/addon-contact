@@ -1,9 +1,9 @@
 <?php
 // addons/contact/routes/web.php
 use Illuminate\Support\Facades\Route;
-use App\Addons\Contact\Controllers\default\CustomerContactController;
+use App\Addons\Contact\Controllers\Front\CustomerContactController;
 
-Route::get('/contact', [CustomerContactController::class, 'customerindex'])->name('customer.index');
+Route::get('/contact', [CustomerContactController::class, 'index'])->name('.index');
 
 
-Route::post('/contact', [CustomerContactController::class, 'customerstore'])->name('customer.store');
+Route::post('/contact', [CustomerContactController::class, 'store'])->name('.store');
