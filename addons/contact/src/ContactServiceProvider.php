@@ -1,20 +1,27 @@
 <?php
 
+/*
+ * This file is part of the CLIENTXCMS project.
+ * This file is the property of the CLIENTXCMS association. Any unauthorized use, reproduction, or download is prohibited.
+ * For more information, please consult our support: clientxcms.com/client/support.
+ * Year: 2024
+ */
+
 namespace App\Addons\Contact;
 
 use App\Addons\Contact\Controllers\Admin\ContactController;
 use App\Addons\Contact\Models\Contact;
 use App\Core\Admin\Dashboard\AdminCountWidget;
-use \App\Extensions\BaseAddonServiceProvider;
+use App\Extensions\BaseAddonServiceProvider;
 use App\Models\Admin\Permission;
 use App\Services\SettingsService;
 use Illuminate\Support\Facades\Storage;
 
 class ContactServiceProvider extends BaseAddonServiceProvider
 {
-  protected string $uuid = "contact";
+    protected string $uuid = 'contact';
 
-  public function register()
+    public function register()
     {
         //
     }
@@ -36,7 +43,7 @@ class ContactServiceProvider extends BaseAddonServiceProvider
         // Routes d'administration
         \Route::middleware(['web', 'admin'])
             ->prefix(admin_prefix())
-            ->name("admin.")
+            ->name('admin.')
             ->group(function () {
                 require addon_path($this->uuid, 'routes/admin.php');
             });
@@ -47,15 +54,16 @@ class ContactServiceProvider extends BaseAddonServiceProvider
             ->group(function () {
                 require addon_path($this->uuid, 'routes/web.php');
             });
-        $service->addCardItem('extensions', 'contacts_list', 'contact::lang.title', 'contact::lang.description', 'bi bi-envelope',action([ContactController::class,'index']), Permission::MANAGE_EXTENSIONS);
-        $service->addCardItem('personalization', 'contacts', 'contact::lang.settings.title', 'contact::lang.settings.description', 'bi bi-envelope-arrow-up', [ContactController::class,'settings'], Permission::MANAGE_EXTENSIONS);
-        $contactWidgets = new AdminCountWidget('contacts', 'bi bi-envelope', 'contact::lang.pending', function() { return Contact::where('read', false)->count(); }, Permission::MANAGE_EXTENSIONS);
+        $service->addCardItem('extensions', 'contacts_list', 'contact::lang.title', 'contact::lang.description', 'bi bi-envelope', action([ContactController::class, 'index']), Permission::MANAGE_EXTENSIONS);
+        $service->addCardItem('personalization', 'contacts', 'contact::lang.settings.title', 'contact::lang.settings.description', 'bi bi-envelope-arrow-up', [ContactController::class, 'settings'], Permission::MANAGE_EXTENSIONS);
+        $contactWidgets = new AdminCountWidget('contacts', 'bi bi-envelope', 'contact::lang.pending', function () {
+            return Contact::where('read', false)->count();
+        }, Permission::MANAGE_EXTENSIONS);
         $this->app['extension']->addAdminCountWidget($contactWidgets);
         if (setting('contact_enable_captcha')) {
             $this->app['extension']->addProtectedRoute('contact.index');
         }
     }
-
 
     protected function initImage(SettingsService $service, string $key, string $setting, string $default): void
     {

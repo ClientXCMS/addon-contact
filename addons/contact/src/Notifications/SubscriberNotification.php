@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the CLIENTXCMS project.
+ * This file is the property of the CLIENTXCMS association. Any unauthorized use, reproduction, or download is prohibited.
+ * For more information, please consult our support: clientxcms.com/client/support.
+ * Year: 2024
+ */
+
 namespace App\Addons\Contact\Notifications;
 
 use App\Addons\Contact\Models\Contact;
@@ -10,8 +17,8 @@ use Illuminate\Notifications\Notification;
 
 class SubscriberNotification extends Notification implements ShouldQueue
 {
-
     use Queueable;
+
     private Contact $contact;
 
     public function __construct(Contact $contact)
@@ -35,6 +42,7 @@ class SubscriberNotification extends Notification implements ShouldQueue
         $url = route('admin.contacts.show', ['contact' => $this->contact->id]);
         $mail = EmailTemplate::getMailMessage('contact_subscriber', $url, $context, $notifiable);
         $mail->metadata('disable_save', true);
+
         return $mail;
     }
 }

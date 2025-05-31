@@ -1,3 +1,11 @@
+<?php
+/*
+ * This file is part of the CLIENTXCMS project.
+ * This file is the property of the CLIENTXCMS association. Any unauthorized use, reproduction, or download is prohibited.
+ * For more information, please consult our support: clientxcms.com/client/support.
+ * Year: 2024
+ */
+?>
 @extends('admin.layouts.admin')
 
 @section('title', __('contact::lang.show_title'))
@@ -54,14 +62,12 @@
                 ])
             </div>
         </div>
-            @dump($contact->message)
         <div class="mt-6">
-            @include('adùo,/shared/textarea', [
+            @include('admin/shared/textarea', [
                 'label' => __('global.content'),
                 'name' => 'message',
                 'value' => $contact->message,
                 'rows' => 5,
-                'attributes' => ['readonly' => true],
             ])
         </div>
 

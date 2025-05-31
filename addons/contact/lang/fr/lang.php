@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * This file is part of the CLIENTXCMS project.
+ * This file is the property of the CLIENTXCMS association. Any unauthorized use, reproduction, or download is prohibited.
+ * For more information, please consult our support: clientxcms.com/client/support.
+ * Year: 2024
+ */
 return [
     'title' => 'Contacts',
     'pending' => 'Demandes de contact en attente',
@@ -21,11 +27,11 @@ return [
         'reply_email' => 'Répondre par email',
         'send_mail' => 'Envoyer un email au client',
         'limit_error' => 'Vous avez déjà envoyé une demande de contact il y a moins de 5 minutes',
-        'store_success' => 'La demande de contact a été enregistrée avec succès'
+        'store_success' => 'La demande de contact a été enregistrée avec succès',
     ],
     'status' => [
         'read' => 'Traité',
-        'unread' => 'Non traité'
+        'unread' => 'Non traité',
     ],
     'webhook' => [
         'title' => 'Nouvelle demande de contact',
@@ -33,7 +39,7 @@ return [
     ],
     'errors' => [
         'not_found' => 'La demande de contact n\'a pas été trouvée',
-        'update_failed' => 'La mise à jour de la demande de contact a échoué'
+        'update_failed' => 'La mise à jour de la demande de contact a échoué',
     ],
     'status_updated_at' => 'Statut mis à jour le :date',
     'settings' => [
@@ -51,6 +57,6 @@ return [
         'require_login_description' => 'Les utilisateurs doivent être connectés pour envoyer un message',
         'page_image' => 'Image de la page',
         'disabled' => 'Désactivé',
-        'enabled' => 'Activé'
-    ]
+        'enabled' => 'Activé',
+    ],
 ];

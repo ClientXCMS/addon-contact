@@ -1,10 +1,12 @@
 <?php
+
 /*
  * This file is part of the CLIENTXCMS project.
  * This file is the property of the CLIENTXCMS association. Any unauthorized use, reproduction, or download is prohibited.
  * For more information, please consult our support: clientxcms.com/client/support.
  * Year: 2024
  */
+
 namespace App\Addons\Contact\Controllers\Front;
 
 use App\Addons\Contact\Models\Contact;
@@ -15,21 +17,21 @@ class CustomerContactController
 {
     public function index()
     {
-        $customer = auth('web')->check() ? auth('web')->user() : new Customer();
-        if (setting('contact_require_login') && !auth('web')->check()) {
+        $customer = auth('web')->check() ? auth('web')->user() : new Customer;
+        if (setting('contact_require_login') && ! auth('web')->check()) {
             return redirect()->route('login');
         }
+
         return view('contact::index', [
             'customer' => $customer,
         ]);
     }
 
-
     public function store(Request $request)
     {
 
         if (setting('contact_require_login') == 1) {
-            if (!auth('web')->check()) {
+            if (! auth('web')->check()) {
                 return redirect()->route('login');
             }
         }
@@ -43,7 +45,7 @@ class CustomerContactController
             'subject' => 'required|max:255',
         ]);
         $contact = Contact::create($validated);
+
         return back()->with('success', __('contact::lang.actions.store_success'));
     }
-
 }
