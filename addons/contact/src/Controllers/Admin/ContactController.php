@@ -69,7 +69,7 @@ class ContactController extends AbstractCrudController
             'contact_enable_captcha' => array_key_exists('contact_enable_captcha', $validated) ? 'true' : 'false',
             'contact_require_login' => array_key_exists('contact_require_login', $validated) ? 'true' : 'false',
             'contact_webhook' => $validated['contact_webhook'] ?? '',
-            'contact_subscribers' => join(',', $validated['contact_subscribers'] ?? ''),
+            'contact_subscribers' => join(',', $validated['contact_subscribers'] ?? []),
         ]);
         if ($request->hasFile('contact_page_image')) {
             if (\setting('contact_page_image') && \Storage::exists(\setting('contact_page_image'))) {
